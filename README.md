@@ -1,22 +1,31 @@
 # code
 
-We herein describe how to run pre-trained LMs on mainstream sentiment analysis task. Simply speaking, there are two steps to take:
-### Step 1 - set up the evaluation environment
-First, please create an virtual environment and install all necessary packages for evaluation scripts
+We herein describe how to train the debias layer on top of LLM step by step. 
+### Prerequisites
+Please create a virtual environment and install all necessary packages for training and evaluation.
 ```
 pip install -r requirements.txt
 ```
+Then, git clone this repository 
+```
+git clone https://github.com/repo4nlp/code.git
+```
+Please put ```positive.txt```, ```negative.txt```, and ```neutral.txt```that obtained from https://github.com/repo4nlp/data in the root directory.
 
-### Step 2 - download the mainstream corpora and processing it to be consumed by our evaluation scripts
-### Step 3 - run the following to yield zeroshot results on sentiment analysis tasks
+### Training the debias layer for LLM
 
 ```shell
-CUDA_VISIBLE_DEVICES=0 python main.py --model_name_or_path roberta-base 
-                --batch_size 1
-                --eval_batch_size 50
-                --pos positive
-                --neu neutral
-                --neg negative
-                --lr 1e-5          
-                --nb_epoch 10      
+python main_debias.py 
+    --model_name_or_path {roberta-base,bert-case-cased} 
+    --batch_size 10
+    --eval_batch_size 50
+    --lr 1e-5          
+    --nb_epoch 10      
+    --pos_dir 'positive.txt'
+    --neu_dir 'neutral.txt'
+    --neg_dir 'negative.txt'
+    --prompt_text 'It was'
+    --pos 'good'
+    --neu 'ok'
+    --neg 'bad'   
 ```
